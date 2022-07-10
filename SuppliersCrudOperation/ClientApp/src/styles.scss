@@ -1,0 +1,42 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+// or
+@import "~bootstrap/scss/bootstrap";
+@import '~ngx-toastr/toastr-bs4-alert';
+
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+/*You can add global styles to this file, and also import other style files */
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #e01a76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.table td, .table th {
+  vertical-align: middle !important;
+}
+.error
+{
+  color:red
+}
+.loading-shade{
+  height: 100%;
+  width:100%;
+  position:fixed;
+  vertical-align: middle !important;
+  left:0px;top:0px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  z-index:1000;
+}
