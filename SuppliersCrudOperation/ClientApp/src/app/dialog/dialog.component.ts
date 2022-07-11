@@ -12,7 +12,7 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from "@angular/material/dial
 		</mat-dialog-actions>`
 })
 export class DemoDialog {
-	message:string;
+	message:string="";
 	constructor(public dialogRef: MatDialogRef<DemoDialog>,
 		@Optional() @Inject(MAT_DIALOG_DATA) private data: any) {
 		if (data != null) {

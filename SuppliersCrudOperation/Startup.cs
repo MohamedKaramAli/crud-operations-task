@@ -28,8 +28,8 @@ namespace SuppliersCrudOperation
             services.AddDbContext<SuppliersDbContext>();
             services.AddScoped<ISupplierService, SupplierService>();
 
-            services.AddTransient(typeof(IGenericRepository<>),typeof(GenericRepository<>));
-   services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(typeof(Startup));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -43,6 +43,13 @@ namespace SuppliersCrudOperation
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowCredentials()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

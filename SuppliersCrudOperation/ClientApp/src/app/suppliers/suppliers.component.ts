@@ -10,7 +10,7 @@ import { SupplierFilterDTO } from '../model/SupplierFilterDTO';
 import { finalize, startWith, switchMap, catchError, map, } from 'rxjs/operators';
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { SupplierDialogComponent } from '../supplier-dialog/supplier-dialog.component';
-import { MatDialog } from '@angular/material';
+
 import { ToastrService } from 'ngx-toastr';
 import { SuppliersService } from 'src/Services/supplier.service';
 import { AppComponentBase } from '../app-component-base';
@@ -23,8 +23,8 @@ import { AppComponentBase } from '../app-component-base';
 export class SuppliersComponent  extends AppComponentBase  implements OnInit {
 
 
-  @ViewChild(MatPaginator,null) paginator: MatPaginator;
-  @ViewChild(MatSort,null) sort: MatSort;
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
   resultsLength:number=0
    suppliers: SupplierDTO[]=[];
   filter: SupplierFilterDTO = new SupplierFilterDTO();
@@ -44,38 +44,60 @@ super(injector);
   ngOnInit(): void {
     this.search();
   
-    this.sort.sortChange
+    this.sort?.sortChange.subscribe(()=>{
+      this.search();
+    });
+    this.paginator?.page.subscribe(()=>{
+      this.search();
+    });
+
 
   }
   search() {
-   this.fillData().subscribe(res=> this.suppliers = res)
+    this.isLoadingResults = true;
+    this.filter.pageCount = this.paginator?.pageSize;
+    this.filter.page = this.paginator?.pageIndex;
+    this.filter.sort = this.sort?.active;
+    this.filter.sortDir = this.sort?.direction 
+    this._supplierService.getAll(this.filter).subscribe((data:any)=>{
+      this.isLoadingResults = false;
+      this.resultsLength = data.totalCount;
+      this.suppliers =  data.items;
+
+    },error=>{
+      this.isLoadingResults = false;
+      return observableOf([]);
+    });
+
+
+   //this.fillData().subscribe(res=> this.suppliers = res)
   }
 
 
-  fillData() {
+  fillData()
+   {
 
-
-    return merge(this.sort.sortChange, this.paginator.page)
-    .pipe(startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          this.filter.pageCount = this.paginator.pageSize;
-          this.filter.page = this.paginator.pageIndex;
-          this.filter.sort = this.sort.active;
-          this.filter.sortDir = this.sort.direction 
-          return this._supplierService.getAll(this.filter);
-        }),
-        map((data:PagedResult<SupplierDTO>) => {
+    // return merge(this.sort?.sortChange, this.paginator?.page)
+    // .pipe(startWith({}),
+    //     switchMap(()=> {
+    //       this.isLoadingResults = true;
+    //       this.filter.pageCount = this.paginator?.pageSize;
+    //       this.filter.page = this.paginator?.pageIndex;
+    //       this.filter.sort = this.sort?.active;
+    //       this.filter.sortDir = this.sort?.direction 
+    //       return this._supplierService.getAll(this.filter);
+    //     }),
+    //     map((data:PagedResult<SupplierDTO>) => {
             
-            this.isLoadingResults = false;
-            this.resultsLength = data.totalCount;
-            return data.items;
-        }),
-        catchError(() => {
-            this.isLoadingResults = false;
-            return observableOf([]);
-        })
-    )
+    //         this.isLoadingResults = false;
+    //         this.resultsLength = data.totalCount;
+    //         return data.items;
+    //     }),
+    //     catchError(() => {
+    //         this.isLoadingResults = false;
+    //         return observableOf([]);
+    //     })
+    // )
 }
 showCreateOrEditSupplierDialog(id?: number): void {
   let createOrEditSupplierDialog;

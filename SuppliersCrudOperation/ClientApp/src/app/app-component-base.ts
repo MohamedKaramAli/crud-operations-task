@@ -36,7 +36,7 @@ export abstract class AppComponentBase {
           if (errorFunc != null) errorFunc();
         });
       }
-      demoDialogRef = null;
+      //;demoDialogRef = null;
     });
   }
 
