@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
@@ -43,16 +43,12 @@ super(injector);
   }
   ngOnInit(): void {
     this.search();
-  
-    this.sort?.sortChange.subscribe(()=>{
-      this.search();
-    });
-    this.paginator?.page.subscribe(()=>{
-      this.search();
-    });
+
+
 
 
   }
+
   search() {
     this.isLoadingResults = true;
     this.filter.pageCount = this.paginator?.pageSize;
@@ -69,36 +65,9 @@ super(injector);
       return observableOf([]);
     });
 
-
-   //this.fillData().subscribe(res=> this.suppliers = res)
   }
 
 
-  fillData()
-   {
-
-    // return merge(this.sort?.sortChange, this.paginator?.page)
-    // .pipe(startWith({}),
-    //     switchMap(()=> {
-    //       this.isLoadingResults = true;
-    //       this.filter.pageCount = this.paginator?.pageSize;
-    //       this.filter.page = this.paginator?.pageIndex;
-    //       this.filter.sort = this.sort?.active;
-    //       this.filter.sortDir = this.sort?.direction 
-    //       return this._supplierService.getAll(this.filter);
-    //     }),
-    //     map((data:PagedResult<SupplierDTO>) => {
-            
-    //         this.isLoadingResults = false;
-    //         this.resultsLength = data.totalCount;
-    //         return data.items;
-    //     }),
-    //     catchError(() => {
-    //         this.isLoadingResults = false;
-    //         return observableOf([]);
-    //     })
-    // )
-}
 showCreateOrEditSupplierDialog(id?: number): void {
   let createOrEditSupplierDialog;
 
